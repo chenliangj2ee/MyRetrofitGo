@@ -15,18 +15,18 @@ class MainActivity : MyBaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        message=findViewById(R.id.message)
+        message = findViewById(R.id.message)
 
         var vm = initVM(TestViewModel::class.java)
 
-        //加载对象
+        //获取Object
         vm.test(this, "name1").obs(this) {
-            it.c { "缓存数据${it.toJson()}".log();message.text="缓存数据${it.toJson()}"}
-            it.y { "网络数据${it.toJson()}".log();message.text="网络数据${it.toJson()}"}
+            it.c { "缓存数据${it.toJson()}".log() }
+            it.y { "网络数据${it.toJson()}".log() }
             it.n { "异常数据${it.toJson()}".log() }
         }
 
-        //url异常测试
+        //获取Array
         vm.tests(this, "name2").obs(this) {
             it.c { "缓存数据${it.toJson()}".log() }
             it.y { "网络数据${it.toJson()}".log() }

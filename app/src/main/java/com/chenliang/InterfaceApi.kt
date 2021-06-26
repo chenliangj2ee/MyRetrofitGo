@@ -5,7 +5,12 @@ import retrofit2.Call
 import retrofit2.http.POST
 import retrofit2.http.Query
 
+
+/**
+ * 说明：接口返回类型必须为：Call<BaseResponse<T>
+ */
 interface InterfaceApi {
+
 
     @POST("home/remind")
     fun getData(
