@@ -93,3 +93,7 @@ class TestViewModel : ViewModel() {
 ### 效果
 ![Video_20210626_034427_427](https://user-images.githubusercontent.com/4067327/123506188-91d41a80-d695-11eb-96aa-183b7d49325d.gif)
 
+# 请资助我一个棒棒糖吧，在此感谢：
+
+<img width="406" alt="微信图片_20210609173434" src="https://user-images.githubusercontent.com/4067327/121332592-989b2780-c94a-11eb-9543-a4e00db3b759.png">
+
