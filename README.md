@@ -63,14 +63,11 @@ class TestViewModel : ViewModel() {
         go({ API.getDatas("tom", "23") }) { data2.value = it }
         return data2
     }
-
-
 }
 ```
 
 ## 五、Activity中调用：
 ```
-
         var vm = initVM(TestViewModel::class.java)
 
         //获取Object数据
@@ -86,7 +83,6 @@ class TestViewModel : ViewModel() {
             it.y { "网络数据${it.toJson()}".log() } 
             it.n { "异常数据${it.toJson()}".log() } 
         }
- 
         
 ```
 #####    数据回调使用说明：it.c{} , it.y{} , it.n{} 三个代码块，调用顺序可随意，只要你高兴，【c,y,n分别对应cache，yes no的意思，你懂的】
