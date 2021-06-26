@@ -84,8 +84,8 @@ class TestViewModel : ViewModel() {
         //获取Array，
         vm.tests(this, "name2").obs(this) {
             //这个代码块，只能有it.c{} , it.y{} , it.n{} 三个代码块，调用顺序可随意，只要你高兴【c,y,n分别对应cache，yes no的意思，你懂的】
-            it.c { "缓存数据${it.toJson()}".log() }//获取到缓存数，如果不使用缓存，可delete该行代码，如果是RecyclerView列表，当page==1时，才执行该段代码
-            it.y { "网络数据${it.toJson()}".log() }//网络加载数据成功,如果是RecyclerView列表，当page==1时，清空缓存数据，在添加最新
+            it.c { "缓存数据${it.toJson()}".log() }//获取到缓存数，如果不使用缓存，可delete该行代码，如果数据分页，当page==1时，才执行该段代码
+            it.y { "网络数据${it.toJson()}".log() }//网络加载数据成功,如果数据分页，当page==1时，清空缓存数据，在添加最新数据
             it.n { "异常数据${it.toJson()}".log() }//网络加载数据失败，如果不处理失败，可delete该行代码
         }
 ```
