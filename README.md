@@ -10,7 +10,7 @@
 ## 三、接口声明：
 ```
 /**
- * 说明：接口返回类型必须为：Call<BaseResponse<T>
+ * 说明：接口返回类型必须为：Call<BaseResponse<T>>
  */
 interface InterfaceApi {
 
