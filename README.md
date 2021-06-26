@@ -75,18 +75,18 @@ class TestViewModel : ViewModel() {
 
         //获取Object 
         vm.test(this, "name1").obs(this) {
-            //it.c{获取到缓存} it.y{网络数据加载成功},it.n{网络数据加载失败} 无顺序要求
-            it.c { "缓存数据${it.toJson()}".log() }//如果使用缓存，可delete该行代码
-            it.y { "网络数据${it.toJson()}".log() }
-            it.n { "异常数据${it.toJson()}".log() }
+            //这个代码块，只能有it.c{} , it.y{} , it.n{} 三个代码块，调用顺序可随意，只要你高兴
+            it.c { "缓存数据${it.toJson()}".log() }}//获取到缓存数，如果不使用缓存，可delete该行代码
+            it.y { "网络数据${it.toJson()}".log() }//网络加载数据成功
+            it.n { "异常数据${it.toJson()}".log() }//网络加载数据失败，如果不处理失败，可delete该行代码
         }
 
         //获取Array，
         vm.tests(this, "name2").obs(this) {
-         //it.c{获取到缓存} it.y{网络数据加载成功},it.n{网络数据加载失败} 无顺序要求
-            it.c { "缓存数据${it.toJson()}".log() }//如果使用缓存，可delete该行代码
-            it.y { "网络数据${it.toJson()}".log() }
-            it.n { "异常数据${it.toJson()}".log() }
+            //这个代码块，只能有it.c{} , it.y{} , it.n{} 三个代码块，调用顺序可随意，只要你高兴
+            it.c { "缓存数据${it.toJson()}".log() }//获取到缓存数，如果不使用缓存，可delete该行代码
+            it.y { "网络数据${it.toJson()}".log() }//网络加载数据成功
+            it.n { "异常数据${it.toJson()}".log() }//网络加载数据失败，如果不处理失败，可delete该行代码
         }
 ```
 
