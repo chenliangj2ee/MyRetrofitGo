@@ -89,3 +89,7 @@ class TestViewModel : ViewModel() {
             it.n { "异常数据${it.toJson()}".log() }
         }
 ```
+
+### 效果
+![Video_20210626_034427_427](https://user-images.githubusercontent.com/4067327/123506188-91d41a80-d695-11eb-96aa-183b7d49325d.gif)
+
