@@ -1,7 +1,8 @@
 ### MyRetrofitGo
-## Kotlin语言实现Retrofit 结合OkHttp网络层，ViewModel技术，使用Kotlin协程，加载网络数据，并添加缓存功能，堪称史上最简洁的代码，实现你想要的功能；
-## 缓存逻辑：接口调用》存在缓存》刷新UI》请求网络》刷新UI》更新到缓存
-## 接口声明：
+## 一、Kotlin语言实现Retrofit 结合OkHttp网络层，ViewModel技术，使用Kotlin协程，加载网络数据，并添加缓存功能，堪称史上最简洁的代码，实现你想要的功能；
+## 二、缓存逻辑：
+##            接口调用》存在缓存》刷新UI》请求网络》刷新UI》更新到缓存
+## 三、接口声明：
 ```
 /**
  * 说明：接口返回类型必须为：Call<BaseResponse<T>
@@ -25,7 +26,7 @@ interface InterfaceApi {
 }
 ```
 
-## ViewModel
+## 四、ViewModel定义
 
 ```
  /**
@@ -62,7 +63,7 @@ class TestViewModel : ViewModel() {
 }
 ```
 
-## Activity中调用：
+## 五、Activity中调用：
 ```
 
         var vm = initVM(TestViewModel::class.java)
