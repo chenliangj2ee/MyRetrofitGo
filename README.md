@@ -35,7 +35,7 @@ interface InterfaceApi {
 
 ```
  /**
- * 接口调用固定写法： go({  接口调用  }) {  xxx.value=it //固定写法 }
+ * 接口调用固定写法： go({  接口调用  }) {  xxx.value=it }
  */
 class TestViewModel : ViewModel() {
 
