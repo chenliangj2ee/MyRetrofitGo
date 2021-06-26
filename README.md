@@ -1,5 +1,5 @@
 # MyRetrofitGo
-## 一、Kotlin语言实现Retrofit2 结合OkHttp3网络层，ViewModel技术，使用Kotlin协程，加载网络数据，并添加缓存功能，堪称史上最简洁的代码，实现你想要的功能；
+## 一、Kotlin语言实现Retrofit2 结合OkHttp3网络层，ViewModel技术，使用Kotlin协程，加载网络数据，并添加缓存功能，减轻开发工作，且增加用户体验，堪称史上最简洁的代码，实现你想要的功能；
 
 
 ## 二、缓存逻辑：
