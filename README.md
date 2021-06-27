@@ -1,5 +1,5 @@
 # MyRetrofitGo
-## 一、史上最精简的【带有缓存】的【网络数据加载】封装，Kotlin语言实现Retrofit2 结合OkHttp3网络层，ViewModel技术，使用Kotlin协程，加载网络数据，并添加缓存功能,，同时针对ApiService接口添加注解配置，来开启关闭loading和缓存启用状态，减轻开发工作，且增加用户体验，堪称史上最简洁的代码，实现你想要的功能；
+## 一、史上最精简的【带有缓存】的【网络数据加载】封装，Kotlin语言实现Retrofit2 结合OkHttp3网络层，ViewModel技术，使用Kotlin协程，加载网络数据，并添加缓存功能,，同时针对ApiService接口添加注解配置，来配置是否显示loadingDiaog、是否启用缓存功能，减轻开发工作，且增加用户体验，堪称史上最简洁的代码，实现你想要的功能；
 
 
 ## 二、缓存逻辑：
