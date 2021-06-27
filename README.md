@@ -76,17 +76,31 @@ class TestViewModel : ViewModel() {
         }
         
 ```
-##### 数据回调方法说明：
-##### --> c：cache简写，缓存加载数据回调；y：yes简写，网络请求成功回调，n：no简写，网络请求失败回调；调用顺序可随意，只要你高兴；
-##### ----> it.c { "缓存数据${it.toJson()}".log() }//获取到缓存数据，如果不使用缓存，可delete该行代码，如果数据分页，当page==1时，才执行该段代码
-##### ----> it.y { "网络数据${it.toJson()}".log() }//网络加载数据成功,如果数据分页，当page==1时，清空list里缓存数据，再添加最新数据到list
-##### ----> it.n { "异常数据${it.toJson()}".log() }//网络加载数据失败，如果不处理失败，可delete该行代码
+## 六、数据回调方法说明：【 c：cache简写；y：yes简写；n：no简写；调用顺序可随意】
 
-### 效果
-![Video_20210626_034427_427](https://user-images.githubusercontent.com/4067327/123506188-91d41a80-d695-11eb-96aa-183b7d49325d.gif)![Video_20210627_121527_755](https://user-images.githubusercontent.com/4067327/123532635-95bd7680-d741-11eb-9c58-7e89069f31e0.gif)
+```
+it.c {  } : 缓存数据加载成功回调；如果不使用缓存，可delete该行代码；如果数据分页，当page==1时，才使用缓存数据；
+it.y {  } : 网络数据加载成功回调；如果不处理成功，可delete该行代码；如果数据分页，当page==1时，清空list里缓存数据，再添加网络数据到list；
+it.n {  } : 网络数据加载失败回调；如果不处理失败，可delete该行代码；如果数据加载失败，且缓存数据存在，根据需要写失败逻辑；
 
+以上代码只是以下代码的简写【省略了else，只为让代码看起来更优雅，更性感，3个If块只会同时执行一个】：
+
+if(it.errno==0&&it.cache){
+    //缓存
+}
+if(it.errno==0&&!it.cache){
+    //成功
+}
+if(it.errno!=0&&!it.cache){
+    //失败
+}
+
+```
+
+### 七、效果
+![Video_20210626_034427_427](https://user-images.githubusercontent.com/4067327/123506188-91d41a80-d695-11eb-96aa-183b7d49325d.gif) ![Video_20210627_121527_755](https://user-images.githubusercontent.com/4067327/123532635-95bd7680-d741-11eb-9c58-7e89069f31e0.gif)
 
 # 请资助我一个棒棒糖吧，在此感谢：
 
-<img width="406" alt="微信图片_20210609173434" src="https://user-images.githubusercontent.com/4067327/121332592-989b2780-c94a-11eb-9543-a4e00db3b759.png">
+<img width="406" alt="微信图片_20210609173434" src="https://user-images.githubusercontent.com/4067327/121332592-989b2780-c94a-11eb-9543-a4e00db3b759.png"> 
 
