@@ -7,7 +7,6 @@ import androidx.lifecycle.*
 import com.chenliang.BaseResponse
 import com.chenliang.InterfaceApi
 import com.chenliang.MyApiFactory
-import com.chenliang.MyApplication
 import com.chenliang.utils.SpUtils
 import com.google.gson.Gson
 import com.google.gson.stream.MalformedJsonException

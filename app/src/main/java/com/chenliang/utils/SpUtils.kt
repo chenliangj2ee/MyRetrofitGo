@@ -36,7 +36,7 @@ object SpUtils {
         key: String,
         clazz: Class<T>?
     ): T? {
-        return getObject(MyApplication.con, key, clazz)
+        return MyApplication.con?.let { getObject(it, key, clazz) }
     }
 
 
@@ -46,7 +46,7 @@ object SpUtils {
     ) {
         if (MyApplication.con == null || bean == null || key == null)
             return
-        putString(MyApplication.con, key, Gson().toJson(bean))
+        putString(MyApplication.con!!, key, Gson().toJson(bean))
     }
 
 
