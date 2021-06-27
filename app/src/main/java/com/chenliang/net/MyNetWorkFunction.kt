@@ -7,6 +7,9 @@ import androidx.lifecycle.*
 import com.chenliang.BaseResponse
 import com.chenliang.InterfaceApi
 import com.chenliang.MyApiFactory
+import com.chenliang.act.MyBaseActivity
+import com.chenliang.annotation.MyRetrofitGo
+import com.chenliang.annotation.MyRetrofitGoValue
 import com.chenliang.utils.SpUtils
 import com.google.gson.Gson
 import com.google.gson.stream.MalformedJsonException
@@ -18,8 +21,10 @@ import kotlinx.coroutines.launch
 import org.json.JSONException
 import retrofit2.Call
 import retrofit2.HttpException
+import retrofit2.http.POST
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import kotlin.reflect.full.findParameterByName
 
 /**
  * 接口ApiService
@@ -39,17 +44,22 @@ fun <T> ViewModel.go(
     funcResponse: (BaseResponse<T>) -> Unit,
 ) {
 
-    viewModelScope.launch(Dispatchers.IO) {
 
+    viewModelScope.launch(Dispatchers.IO) {
         var path = ""
+        var myRetrofitGoValue: MyRetrofitGoValue
         var responseBean = try {
             var cell = block()
             path = cell.request().url.toString()
-            //缓存处理
-            initCache(path!!, funcResponse, viewModelScope)
-//            delay(1000)//模拟延迟
+            //是否启用缓存
+            myRetrofitGoValue = getMyRetrofitGoValue(path)
+            if (myRetrofitGoValue.cache) {
+                initCache(myRetrofitGoValue, path!!, funcResponse, viewModelScope)
+            }
+
+            delay(1000)//模拟延迟,上线的时候，注释掉
             var res = cell.execute()
-            if (res!=null && res.isSuccessful) {
+            if (res != null && res.isSuccessful) {
                 res.body()
             } else {
                 var bean = BaseResponse<T>()
@@ -64,13 +74,31 @@ fun <T> ViewModel.go(
         viewModelScope.launch(Dispatchers.Main) { funcResponse(responseBean!!) }
         //把数据更新到缓存
         if (responseBean?.errno == 0) {
-            SpUtils.putCache(path, responseBean );
+            SpUtils.putCache(path, responseBean);
         }
+
         delay(100)
         RxBus.get().send(31415927, path)
     }
 }
 
+/**
+ * 获取MyRetrofitGo注解loading和cache
+ */
+fun getMyRetrofitGoValue(path: String): MyRetrofitGoValue {
+    var methods = InterfaceApi::class.java.methods
+    for (method in methods) {
+        var annotation = method.getAnnotation(POST::class.java)
+        var postValue = annotation.value
+        if (path.contains(postValue)) {
+            var loading = method.getAnnotation(MyRetrofitGo::class.java).loading
+            var cache = method.getAnnotation(MyRetrofitGo::class.java).cache
+            var hasCacheLoading = method.getAnnotation(MyRetrofitGo::class.java).hasCacheLoading
+            return MyRetrofitGoValue(loading, cache, hasCacheLoading)
+        }
+    }
+    return MyRetrofitGoValue(loading = true, hasCacheLoading = false, cache = true)
+}
 
 /**对象
  * MutableLiveData<BaseEntity<T>简写方案
@@ -116,24 +144,34 @@ fun <T> MutableLiveData<T>.obs(owner: LifecycleOwner, func: (t: T) -> Unit) = th
  * 从缓存里获取数据,没缓存时，显示loadingDialog，并执行response方法
  */
 fun <T> initCache(
+    myRetrofitGoValue: MyRetrofitGoValue,
     path: String,
     func: (BaseResponse<T>) -> Unit,
     viewModelScope: CoroutineScope
 ) {
 
+    var hasCache = false
+
     if (!path.isNullOrEmpty()) {
         var cacheResponse = SpUtils.getCache(path, BaseResponse<T>()::class.java)
 
-        Log.i("MyLog","------------$cacheResponse")
-        if(cacheResponse!=null){
+        if (cacheResponse != null) {
             cacheResponse.cache = true
             viewModelScope.launch(Dispatchers.Main) { func(cacheResponse) }
-            return
+            hasCache = true
         }
 
     }
 
-    RxBus.get().send(31415926, path)//显示dialog
+    if (hasCache) {
+        if (myRetrofitGoValue.hasCacheLoading) {
+            RxBus.get().send(31415926, path)//显示dialog
+        }
+    } else if (myRetrofitGoValue.loading) {
+        RxBus.get().send(31415926, path)//显示dialog
+    }
+
+
 }
 
 /**

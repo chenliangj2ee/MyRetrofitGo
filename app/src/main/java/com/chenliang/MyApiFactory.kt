@@ -10,7 +10,6 @@ object MyApiFactory {
 
 
     init {
-        "network init ....".log()
         api=initAPI(base,InterfaceApi::class.java)
     }
 

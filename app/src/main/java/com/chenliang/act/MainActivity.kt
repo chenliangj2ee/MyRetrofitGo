@@ -28,12 +28,12 @@ class MainActivity : MyBaseActivity() {
             it.n { if(data1==null){ message.text = "异常数据${it.toJson()}" }}
         }
 
-//        //获取Array
-//        vm.tests(this, "name2").obs(this) {
-//            it.c { "缓存数据${it.toJson()}".log() }
-//            it.y { "网络数据${it.toJson()}".log() }
-//            it.n { "异常数据${it.toJson()}".log() }
-//        }
+        //获取Array
+        vm.tests(this, "name2").obs(this) {
+            it.c { "缓存数据${it.toJson()}".log() }
+            it.y { "网络数据${it.toJson()}".log() }
+            it.n { "异常数据${it.toJson()}".log() }
+        }
     }
 
 
