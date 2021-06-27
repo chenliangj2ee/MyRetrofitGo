@@ -3,6 +3,7 @@ package com.chenliang.act
 import android.app.Activity
 import android.app.ProgressDialog
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import gorden.rxbus2.RxBus
 import gorden.rxbus2.Subscribe
@@ -36,8 +37,9 @@ open class MyBaseActivity : AppCompatActivity() {
 
         var dialogs = HashMap<String, ProgressDialog>()
 
-        @Subscribe(code = 100, threadMode = ThreadMode.MAIN)
+        @Subscribe(code = 31415926, threadMode = ThreadMode.MAIN)
         fun showLoading(id: String) {
+            Log.i("MyLoading","showLoading.....$id")
             var dialog = ProgressDialog(act)
             dialog.setMessage("加载中")
             dialog.show()
@@ -45,9 +47,11 @@ open class MyBaseActivity : AppCompatActivity() {
 
         }
 
-        @Subscribe(code = 101, threadMode = ThreadMode.MAIN)
+        @Subscribe(code = 31415927, threadMode = ThreadMode.MAIN)
         fun closeLoading(id: String) {
-            dialogs[id]!!.dismiss()
+            dialogs[id]?.dismiss()
+            dialogs.remove(id)
+            Log.i("MyLoading","closeLoading.....$id")
         }
 
         fun stop() {
