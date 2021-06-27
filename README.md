@@ -76,7 +76,7 @@ class TestViewModel : ViewModel() {
         }
         
 ```
-## 六、数据回调方法说明：【 c：cache简写；y：yes简写；n：no简写；调用顺序可随意，只要你高兴】
+## 六、数据回调方法说明：【 c：cache简写；y：yes简写；n：no简写；调用顺序可随意】
 
 ```
     it.c {  } : 缓存数据加载成功回调；如果不使用缓存，可delete该行代码；如果数据分页，当page==1时，才使用缓存数据；
