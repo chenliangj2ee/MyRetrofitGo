@@ -87,5 +87,5 @@ class TestViewModel : ViewModel() {
 
 # 请资助我一个棒棒糖吧，在此感谢：
 
-<img width="406" alt="微信图片_20210609173434" src="https://user-images.githubusercontent.com/4067327/121332592-989b2780-c94a-11eb-9543-a4e00db3b759.png">
+<img width="406" alt="微信图片_20210609173434" src="https://user-images.githubusercontent.com/4067327/121332592-989b2780-c94a-11eb-9543-a4e00db3b759.png">![Video_20210627_121527_755](https://user-images.githubusercontent.com/4067327/123532635-95bd7680-d741-11eb-9c58-7e89069f31e0.gif)
 
