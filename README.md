@@ -1,5 +1,5 @@
 # MyRetrofitGo
-## 一、史上最精简的【带有缓存】的【网络数据加载】封装，Kotlin语言实现Retrofit2 结合OkHttp3网络层，ViewModel技术，使用Kotlin协程，加载网络数据，并添加缓存功能，减轻开发工作，且增加用户体验，堪称史上最简洁的代码，实现你想要的功能；
+## 一、史上最精简的【带有缓存】的【网络数据加载】封装，Kotlin语言实现Retrofit2 结合OkHttp3网络层，ViewModel技术，使用Kotlin协程，加载网络数据，并添加缓存功能,，同时针对ApiService接口添加注解配置，来配置是否显示loadingDiaog、是否启用缓存功能，减轻开发工作，且增加用户体验，堪称史上最简洁的代码，实现你想要的功能；
 
 
 ## 二、缓存逻辑：
@@ -11,17 +11,21 @@
 ```
 /**
  * 说明：接口返回类型必须为：Call<BaseResponse<T>>
+ *@MyRetrofitGo注解说明：
+ *                   loading：是否显示loadingDialog，默认true
+ *                   cache：是否启用缓存功能，默认true
+ *                   hasCacheLoading：存在缓存数据时，是否显示loading，默认false
  */
 interface InterfaceApi {
 
-    
+    @MyRetrofitGo(loading = true, cache = true, hasCacheLoading = false)
     @POST("home/remind")
     fun getData(
         @Query("username") username: String,
         @Query("age") age: String,
     ): Call<BaseResponse<BeanRemind>>
 
-
+    @MyRetrofitGo(loading = false, cache = false)
     @POST("home/remind2")
     fun getDatas(
         @Query("username") username: String,
