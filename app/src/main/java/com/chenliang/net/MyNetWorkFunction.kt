@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONException
 import retrofit2.Call
 import retrofit2.HttpException
+import retrofit2.http.GET
 import retrofit2.http.POST
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
@@ -88,8 +89,14 @@ fun <T> ViewModel.go(
 fun getMyRetrofitGoValue(path: String): MyRetrofitGoValue {
     var methods = InterfaceApi::class.java.methods
     for (method in methods) {
-        var annotation = method.getAnnotation(POST::class.java)
-        var postValue = annotation.value
+        var postAnnotation =  method.getAnnotation(POST::class.java)
+        var getAnnotation =  method.getAnnotation(GET::class.java)
+        var postValue = when {
+            postAnnotation != null ->   postAnnotation.value
+            getAnnotation != null ->   getAnnotation.value
+            else -> break
+        }
+        Log.i("MyLog", "path:$postValue")
         if (path.contains(postValue)) {
             var loading = method.getAnnotation(MyRetrofitGo::class.java).loading
             var cache = method.getAnnotation(MyRetrofitGo::class.java).cache
