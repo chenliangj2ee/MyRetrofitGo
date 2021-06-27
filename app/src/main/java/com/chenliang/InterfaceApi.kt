@@ -19,7 +19,7 @@ interface InterfaceApi {
         @Query("age") age: String,
     ): Call<BaseResponse<BeanRemind>>
 
-
+    @MyRetrofitGo(loading = false, cache = false)
     @POST("home/remind2")
     fun getDatas(
         @Query("username") username: String,
