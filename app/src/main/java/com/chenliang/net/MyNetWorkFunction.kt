@@ -7,9 +7,9 @@ import androidx.lifecycle.*
 import com.chenliang.BaseResponse
 import com.chenliang.InterfaceApi
 import com.chenliang.MyApiFactory
-import com.chenliang.act.MyBaseActivity
 import com.chenliang.annotation.MyRetrofitGo
 import com.chenliang.annotation.MyRetrofitGoValue
+import com.chenliang.model.BeanRemind
 import com.chenliang.utils.SpUtils
 import com.google.gson.Gson
 import com.google.gson.stream.MalformedJsonException
@@ -25,7 +25,6 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
-import kotlin.reflect.full.findParameterByName
 
 /**
  * 接口ApiService
@@ -89,33 +88,36 @@ fun <T> ViewModel.go(
 fun getMyRetrofitGoValue(path: String): MyRetrofitGoValue {
     var methods = InterfaceApi::class.java.methods
     for (method in methods) {
-        var postAnnotation =  method.getAnnotation(POST::class.java)
-        var getAnnotation =  method.getAnnotation(GET::class.java)
-        var postValue = when {
-            postAnnotation != null ->   postAnnotation.value
-            getAnnotation != null ->   getAnnotation.value
+        //找到POST、GET对应的路径value值
+        var postAnnotation = method.getAnnotation(POST::class.java)
+        var getAnnotation = method.getAnnotation(GET::class.java)
+        var urlValue = when {
+            postAnnotation != null -> postAnnotation.value
+            getAnnotation != null -> getAnnotation.value
             else -> break
         }
-        Log.i("MyLog", "path:$postValue")
-        if (path.contains(postValue)) {
+
+        //根据全路径path结尾是否匹配urlValue
+        if (path.split("?")[0].endsWith(urlValue)) {
+            Log.i("MyLog", "path:${path.split("?")[0]} url:$urlValue")
             var loading = method.getAnnotation(MyRetrofitGo::class.java).loading
             var cache = method.getAnnotation(MyRetrofitGo::class.java).cache
             var hasCacheLoading = method.getAnnotation(MyRetrofitGo::class.java).hasCacheLoading
             return MyRetrofitGoValue(loading, cache, hasCacheLoading)
         }
     }
-    return MyRetrofitGoValue(loading = true, hasCacheLoading = false, cache = true)
+    return MyRetrofitGoValue(loading = true, cache = true, hasCacheLoading = false)
 }
 
 /**对象
  * MutableLiveData<BaseEntity<T>简写方案
  */
-fun <T> ViewModel.initData() = MutableLiveData<BaseResponse<T>>()
+fun <T> ViewModel.initData() = lazy { MutableLiveData<BaseResponse<T>>() }
 
 /**数组
  * MutableLiveData<BaseEntity<ArrayList<T>>>简写方案
  */
-fun <T> ViewModel.initDatas() = MutableLiveData<BaseResponse<ArrayList<T>>>()
+fun <T> ViewModel.initDatas() = lazy { MutableLiveData<BaseResponse<ArrayList<T>>>() }
 
 
 /**
@@ -143,7 +145,8 @@ fun <T> BaseResponse<T>.n(func: () -> Unit) {
  * 观察者监听数据变化
  */
 fun <T> MutableLiveData<T>.obs(owner: LifecycleOwner, func: (t: T) -> Unit) = this.apply {
-    this.observe(owner, Observer<T> { func(it) })
+    if (!this.hasObservers())
+        this.observe(owner, Observer<T> { func(it) })
 }
 
 

@@ -12,11 +12,13 @@ class TestViewModel : ViewModel() {
     /**
      * data为Object时，使用initData
      */
-    var data1 = initData<BeanRemind>()
+    val data1 by initData<BeanRemind>()
+
     /**
      * data为Array时，initDatas
      */
-    var data2 = initDatas<BeanRemind>()
+    val data2 by initDatas<BeanRemind>()
+
 
     /**
      * 获取Object数据测试，必须返回 MutableLiveData<BaseResponse<T>>类型
