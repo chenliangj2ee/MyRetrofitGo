@@ -12,25 +12,28 @@
 /**
  * 说明：接口返回类型必须为：Call<BaseResponse<T>>
  *@MyRetrofitGo注解说明：
- *                   loading：是否显示loadingDialog，默认true
- *                   cache：是否启用缓存功能，默认true
- *                   hasCacheLoading：存在缓存数据时，是否显示loading，默认false
+ *  loading：是否显示loadingDialog，默认true
+ *  cache：是否启用缓存功能，默认true
+ *  hasCacheLoading：存在缓存数据时，是否显示loading，默认false
+ *@接口方法返回说明【BeanRemind为定义的数据模型】:
+ *  如果接口返回数据类型为对象：则返回Data<BeanRemind>
+ *  如果接口返回数据类型为数组：则返回Datas<BeanRemind>
  */
 interface InterfaceApi {
 
-    @MyRetrofitGo(loading = true, cache = true, hasCacheLoading = false)
-    @POST("home/remind")
-    fun getData(
-        @Query("username") username: String,
-        @Query("age") age: String,
-    ): Call<BaseResponse<BeanRemind>>
-
-    @MyRetrofitGo(loading = false, cache = false)
-    @POST("home/remind2")
-    fun getDatas(
-        @Query("username") username: String,
-        @Query("age") age: String,
-    ): Call<BaseResponse<ArrayList<BeanRemind>>>
+     @MyRetrofitGo(loading = true, cache = true, hasCacheLoading = false)
+     @POST("home/remind")
+     fun getData(
+         @Query("username") username: String,
+         @Query("age") age: String,
+     ): Data<BeanRemind>
+ 
+     @MyRetrofitGo(loading = false, cache = false)
+     @GET("home/getUser")
+     fun getDatas(
+         @Query("username") username: String,
+         @Query("age") age: String,
+     ): Datas<BeanRemind>
 
 }
 ```
