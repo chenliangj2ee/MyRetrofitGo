@@ -7,24 +7,26 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-
+typealias Data<T> = Call<BaseResponse<T>>
+typealias Datas<T> = Call<BaseResponse<ArrayList<T>>>
 /**
  * 说明：接口返回类型必须为：Call<BaseResponse<T>
  */
 interface InterfaceApi {
+
 
     @MyRetrofitGo(loading = true, cache = true, hasCacheLoading = false)
     @POST("home/remind")
     fun getData(
         @Query("username") username: String,
         @Query("age") age: String,
-    ): Call<BaseResponse<BeanRemind>>
+    ): Data<BeanRemind>
 
     @MyRetrofitGo(loading = false, cache = false)
     @GET("home/getUser")
     fun getDatas(
         @Query("username") username: String,
         @Query("age") age: String,
-    ): Call<BaseResponse<ArrayList<BeanRemind>>>
+    ): Datas<BeanRemind>
 
 }
