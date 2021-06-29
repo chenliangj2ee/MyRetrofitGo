@@ -39,25 +39,14 @@ interface InterfaceApi {
 
 ```
  /**
- * 接口调用固定写法： go({  接口调用  }) {  xxx.value=it }
+ * 接口调用固定写法：fun youFunction(参数...) = go { APIService接口调用 }
  */
 class TestViewModel : ViewModel() {
 
-    var data1 = initData<BeanRemind>()  // data为Object时，使用initData
-   
-    var data2 = initDatas<BeanRemind>()  // data为Array时，initDatas
+    fun test(name: String) = go { API.getData(name, "23") }
 
-    //获取Object数据测试，必须返回 MutableLiveData<BaseResponse<T>>类型
-    fun test(con: Context, name: String): MutableLiveData<BaseResponse<BeanRemind>> {
-        go({ API.getData("tom", "23") }) { data1.value = it }
-        return data1
-    }
-
-    //获取Array数据测试，必须返回 MutableLiveData<BaseResponse<ArrayList<T>>>类型
-    fun tests(con: Context, name: String): MutableLiveData<BaseResponse<ArrayList<BeanRemind>>> {
-        go({ API.getDatas("tom", "23") }) { data2.value = it }
-        return data2
-    }
+    fun tests(name: String) = go { API.getDatas(name, "23") }
+ 
 }
 ```
 
