@@ -39,9 +39,9 @@ interface InterfaceApi {
 
 ```
  /**
- * 接口调用固定写法：fun youFunction(参数...) = go { APIService接口调用 }
+ * 继承BaseViewModel，接口调用固定写法：fun youFunction(参数...) = go { APIService接口调用 }
  */
-class TestViewModel : ViewModel() {
+class TestViewModel : BaseViewModel() {
 
     fun test(name: String) = go { API.getData(name, "23") }
 
