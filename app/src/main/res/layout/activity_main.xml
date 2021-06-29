@@ -7,12 +7,20 @@
     tools:context="com.chenliang.act.MainActivity">
 
     <TextView
-        android:id="@+id/message"
+        android:id="@+id/message1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="30dp"
-        android:textColor="#000000"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:padding="10dp"
-         />
+        android:textColor="#000000"
+        android:textSize="30dp" />
 
+    <TextView
+        android:id="@+id/message2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:textColor="#000000"
+        android:textSize="30dp" />
 </LinearLayout>

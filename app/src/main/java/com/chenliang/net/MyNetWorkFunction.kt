@@ -39,24 +39,42 @@ var Any.API: InterfaceApi
 fun <T> Any.initAPI(url: String, cla: Class<T>): T = MyNetWork.initRetrofit(url).create(cla)
 
 
-fun <T> ViewModel.go(
-    block: (CoroutineScope).() -> Call<BaseResponse<T>>,
-    funcResponse: (BaseResponse<T>) -> Unit,
-) {
+/**
+ * 接口ApiService
+ */
+var ViewModel.DataMap: HashMap<String, MutableLiveData<BaseResponse<Any>>>
+    get() = HashMap<String,MutableLiveData<BaseResponse<Any>>>()
+    set(value) = TODO()
 
+
+fun <T> ViewModel.go(
+    block: () -> Call<BaseResponse<T>>
+): MutableLiveData<BaseResponse<T>> {
+
+
+    if(DataMap==null){
+        DataMap=HashMap<String, MutableLiveData<BaseResponse<Any>>>()
+    }
+
+    var s=System.currentTimeMillis()
+    var cell = block()
+    var path  = cell.request().url.toString()
+    Log.i("chenliang", "path:$path")
+
+    var data =DataMap[path]
+    if(data==null){
+        data=MutableLiveData<BaseResponse<Any>>()
+        DataMap[path]=data
+    }
 
     viewModelScope.launch(Dispatchers.IO) {
-        var path = ""
         var myRetrofitGoValue: MyRetrofitGoValue
         var responseBean = try {
-            var cell = block()
-            path = cell.request().url.toString()
-
 
             //是否启用缓存
             myRetrofitGoValue = getMyRetrofitGoValue(path)
             if (myRetrofitGoValue.cache) {
-                initCache(myRetrofitGoValue, path!!, funcResponse, viewModelScope)
+                initCache(myRetrofitGoValue, path!!, data, viewModelScope)
             }
 
             delay(1000)//模拟延迟,上线的时候，注释掉
@@ -73,7 +91,7 @@ fun <T> ViewModel.go(
             apiException<T>(e)
         }
 
-        viewModelScope.launch(Dispatchers.Main) { funcResponse(responseBean!!) }
+        viewModelScope.launch(Dispatchers.Main) { data.value=responseBean as BaseResponse<Any>  }
         //把数据更新到缓存
         if (responseBean?.errno == 0) {
             SpUtils.putCache(path, responseBean);
@@ -82,6 +100,7 @@ fun <T> ViewModel.go(
         delay(100)
         RxBus.get().send(31415927, path)
     }
+   return data!! as MutableLiveData<BaseResponse<T>>
 }
 
 /**
@@ -143,7 +162,7 @@ fun <T> MutableLiveData<T>.obs(owner: LifecycleOwner, func: (t: T) -> Unit) = th
 fun <T> initCache(
     myRetrofitGoValue: MyRetrofitGoValue,
     path: String,
-    func: (BaseResponse<T>) -> Unit,
+    data: MutableLiveData<BaseResponse<T>>,
     viewModelScope: CoroutineScope
 ) {
 
@@ -154,7 +173,7 @@ fun <T> initCache(
 
         if (cacheResponse != null) {
             cacheResponse.cache = true
-            viewModelScope.launch(Dispatchers.Main) { func(cacheResponse) }
+            viewModelScope.launch(Dispatchers.Main) { data.value=cacheResponse }
             hasCache = true
         }
 

@@ -1,40 +1,20 @@
 package com.chenliang.vm
 
 import android.content.Context
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.chenliang.BaseResponse
-import com.chenliang.model.BeanRemind
-import com.chenliang.net.*
+import com.chenliang.net.API
+import com.chenliang.net.go
 
 class TestViewModel : ViewModel() {
 
     /**
-     * data为Object时，使用initData
-     */
-    val data1 by initData<BeanRemind>()
-
-    /**
-     * data为Array时，initDatas
-     */
-    val data2 by initDatas<BeanRemind>()
-
-
-    /**
      * 获取Object数据测试，必须返回 MutableLiveData<BaseResponse<T>>类型
      */
-    fun test(con: Context, name: String): MutableLiveData<BaseResponse<BeanRemind>> {
-        go({ API.getData("tom", "23") }) { data1.value = it }
-        return data1
-    }
+    fun test(con: Context, name: String) = go { API.getData("tom", "23") }
 
     /**
      * 获取Array数据测试，必须返回 MutableLiveData<BaseResponse<ArrayList<T>>>类型
      */
-    fun tests(con: Context, name: String): MutableLiveData<BaseResponse<ArrayList<BeanRemind>>> {
-        go({ API.getDatas("tom", "23") }) { data2.value = it }
-        return data2
-    }
-
+    fun tests(con: Context, name: String) = go { API.getDatas("tom", "23") }
 
 }
