@@ -10,7 +10,7 @@
 ## 三、接口声明：
 ```
 /**
- * 说明：接口返回类型必须为：Call<BaseResponse<T>>
+ * 说明：接口返回类型必须为：Call<BaseResponse<T>>,可以简写为Data<T>或者Datas<T>
  *@MyRetrofitGo注解说明：
  *  loading：是否显示loadingDialog，默认true
  *  cache：是否启用缓存功能，默认true
