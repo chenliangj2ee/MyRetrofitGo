@@ -51,6 +51,8 @@ fun <T> ViewModel.go(
         var responseBean = try {
             var cell = block()
             path = cell.request().url.toString()
+
+
             //是否启用缓存
             myRetrofitGoValue = getMyRetrofitGoValue(path)
             if (myRetrofitGoValue.cache) {
@@ -86,24 +88,9 @@ fun <T> ViewModel.go(
  * 获取MyRetrofitGo注解loading和cache
  */
 fun getMyRetrofitGoValue(path: String): MyRetrofitGoValue {
-    var methods = InterfaceApi::class.java.methods
-    for (method in methods) {
-        //找到POST、GET对应的路径value值
-        var postAnnotation = method.getAnnotation(POST::class.java)
-        var getAnnotation = method.getAnnotation(GET::class.java)
-        var urlValue = when {
-            postAnnotation != null -> postAnnotation.value
-            getAnnotation != null -> getAnnotation.value
-            else -> break
-        }
-
-        //根据全路径path结尾是否匹配urlValue
-        if (path.split("?")[0].endsWith(urlValue)) {
-            Log.i("MyLog", "path:${path.split("?")[0]} url:$urlValue")
-            var loading = method.getAnnotation(MyRetrofitGo::class.java).loading
-            var cache = method.getAnnotation(MyRetrofitGo::class.java).cache
-            var hasCacheLoading = method.getAnnotation(MyRetrofitGo::class.java).hasCacheLoading
-            return MyRetrofitGoValue(loading, cache, hasCacheLoading)
+    MyApiAnno.value.forEach {
+        if (path.split("?")[0].endsWith(it.key)) {
+            return it.value
         }
     }
     return MyRetrofitGoValue(loading = true, cache = true, hasCacheLoading = false)
