@@ -11,6 +11,7 @@ import com.chenliang.annotation.MyRetrofitGo
 import com.chenliang.annotation.MyRetrofitGoValue
 import com.chenliang.model.BeanRemind
 import com.chenliang.utils.SpUtils
+import com.chenliang.vm.BaseViewModel
 import com.google.gson.Gson
 import com.google.gson.stream.MalformedJsonException
 import gorden.rxbus2.RxBus
@@ -39,34 +40,23 @@ var Any.API: InterfaceApi
 fun <T> Any.initAPI(url: String, cla: Class<T>): T = MyNetWork.initRetrofit(url).create(cla)
 
 
-/**
- * 接口ApiService
- */
-var ViewModel.DataMap: HashMap<String, MutableLiveData<BaseResponse<Any>>>
-    get() = HashMap<String,MutableLiveData<BaseResponse<Any>>>()
-    set(value) = TODO()
 
-
-fun <T> ViewModel.go(
+fun <T> BaseViewModel.go(
     block: () -> Call<BaseResponse<T>>
 ): MutableLiveData<BaseResponse<T>> {
 
 
-    if(DataMap==null){
-        DataMap=HashMap<String, MutableLiveData<BaseResponse<Any>>>()
-    }
-
     var s=System.currentTimeMillis()
     var cell = block()
     var path  = cell.request().url.toString()
-    Log.i("chenliang", "path:$path")
 
-    var data =DataMap[path]
+
+    var data =dataMap[path.split("?")[0]]
     if(data==null){
         data=MutableLiveData<BaseResponse<Any>>()
-        DataMap[path]=data
+        dataMap[path.split("?")[0]]=data
     }
-
+    Log.i("MyLog", "path:${path.split("?")[0]}  DataMap:${dataMap.size}")
     viewModelScope.launch(Dispatchers.IO) {
         var myRetrofitGoValue: MyRetrofitGoValue
         var responseBean = try {

@@ -24,19 +24,24 @@ class MainActivity : MyBaseActivity() {
         var vm = initVM(TestViewModel::class.java)
         //获取Object
         var data1: BaseResponse<BeanRemind>? = null
-        vm.test(this, "name1").obs(this) {
-            it.c { message1.text = "缓存数据${it.toJson()}";data1 = it }
-            it.y { message1.text = "网络数据${it.toJson()}" }
-            it.n { if (data1 == null) message1.text = "异常数据${it.toJson()}"
-            }
-        }
-        //获取Array
 
-        vm.tests(this, "name1").obs(this) {
-            it.c { message2.text = "缓存数据${it.toJson()}" }
-            it.y { message2.text = "网络数据${it.toJson()}" }
-            it.n { message2.text = "异常数据${it.toJson()}" }
+        for(i in 1..10){
+
+            vm.test(this, "name1$i").obs(this) {
+                it.c { message1.text = "缓存数据${it.toJson()}";data1 = it }
+                it.y { message1.text = "网络数据${it.toJson()}" }
+                it.n { if (data1 == null) message1.text = "异常数据${it.toJson()}"
+                }
+            }
+
         }
+//        //获取Array
+//
+//        vm.tests(this, "name1").obs(this) {
+//            it.c { message2.text = "缓存数据${it.toJson()}" }
+//            it.y { message2.text = "网络数据${it.toJson()}" }
+//            it.n { message2.text = "异常数据${it.toJson()}" }
+//        }
     }
 
 
