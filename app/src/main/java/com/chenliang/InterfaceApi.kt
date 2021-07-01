@@ -15,14 +15,14 @@ typealias Datas<T> = Call<BaseResponse<ArrayList<T>>>
 interface InterfaceApi {
 
 
-    @MyRetrofitGo(loading = true, cache = true, hasCacheLoading = false)
+    @MyRetrofitGo(tag = "获取通知",loading = true, cache = true, hasCacheLoading = false)
     @POST("home/remind")
     fun getData(
         @Query("username") username: String,
         @Query("age") age: String,
     ): Data<BeanRemind>
 
-    @MyRetrofitGo(loading = false, cache = false)
+    @MyRetrofitGo(tag = "获取用户",loading = false, cache = false)
     @GET("home/getUser")
     fun getDatas(
         @Query("username") username: String,

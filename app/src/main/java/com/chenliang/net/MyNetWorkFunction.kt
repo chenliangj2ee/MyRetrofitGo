@@ -10,9 +10,11 @@ import com.chenliang.MyApiFactory
 import com.chenliang.annotation.MyRetrofitGo
 import com.chenliang.annotation.MyRetrofitGoValue
 import com.chenliang.model.BeanRemind
+import com.chenliang.net.log.BeanLog
 import com.chenliang.utils.SpUtils
 import com.chenliang.vm.BaseViewModel
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.gson.stream.MalformedJsonException
 import gorden.rxbus2.RxBus
 import kotlinx.coroutines.CoroutineScope
@@ -50,6 +52,7 @@ fun <T> BaseViewModel.go(
     var cell = block()
     var path  = cell.request().url.toString()
 
+    Log.i("MyLog", "request:${ cell.request().url}")
 
     var data =dataMap[path.split("?")[0]]
     if(data==null){
@@ -58,7 +61,8 @@ fun <T> BaseViewModel.go(
     }
     Log.i("MyLog", "path:${path.split("?")[0]}  DataMap:${dataMap.size}")
     viewModelScope.launch(Dispatchers.IO) {
-        var myRetrofitGoValue: MyRetrofitGoValue
+        var myRetrofitGoValue: MyRetrofitGoValue?=null
+        var log=BeanLog()
         var responseBean = try {
 
             //是否启用缓存
@@ -69,6 +73,7 @@ fun <T> BaseViewModel.go(
 
             delay(1000)//模拟延迟,上线的时候，注释掉
             var res = cell.execute()
+            RxBus.get().send(31415928, log)
             if (res != null && res.isSuccessful) {
                 res.body()
             } else {
@@ -80,7 +85,9 @@ fun <T> BaseViewModel.go(
         } catch (e: Exception) {
             apiException<T>(e)
         }
-
+        log.tag=myRetrofitGoValue!!.tag
+        log.url=path
+        log.json=GsonBuilder() .setPrettyPrinting()  .create().toJson( responseBean)
         viewModelScope.launch(Dispatchers.Main) { data.value=responseBean as BaseResponse<Any>  }
         //把数据更新到缓存
         if (responseBean?.errno == 0) {
@@ -102,7 +109,7 @@ fun getMyRetrofitGoValue(path: String): MyRetrofitGoValue {
             return it.value
         }
     }
-    return MyRetrofitGoValue(loading = true, cache = true, hasCacheLoading = false)
+    return MyRetrofitGoValue(loading = true, cache = true, hasCacheLoading = false,tag = "")
 }
 
 /**对象

@@ -35,8 +35,9 @@ object MyApiAnno {
             var loading = method.getAnnotation(MyRetrofitGo::class.java).loading
             var cache = method.getAnnotation(MyRetrofitGo::class.java).cache
             var hasCacheLoading = method.getAnnotation(MyRetrofitGo::class.java).hasCacheLoading
+            var tag = method.getAnnotation(MyRetrofitGo::class.java).tag
 
-            value[path] = MyRetrofitGoValue(loading, cache, hasCacheLoading)
+            value[path] = MyRetrofitGoValue(loading, cache, hasCacheLoading,tag)
         }
     }
 }

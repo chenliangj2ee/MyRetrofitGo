@@ -9,5 +9,6 @@ package com.chenliang.annotation
 annotation class MyRetrofitGo(
     val loading: Boolean = true,
     val cache: Boolean = true,
-    val hasCacheLoading: Boolean = false
+    val hasCacheLoading: Boolean = false,
+    val tag: String = ""
 )
