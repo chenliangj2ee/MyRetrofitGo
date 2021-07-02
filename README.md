@@ -12,6 +12,7 @@
 /**
  * 说明：接口返回类型必须为：Call<BaseResponse<T>>,可以简写为Data<T>或者Datas<T>
  *@MyRetrofitGo注解说明：
+ *  tag：给接口定义个名字：方便http view查看，默认显示 @POST("home/remind")里的url
  *  loading：是否显示loadingDialog，默认true
  *  cache：是否启用缓存功能，默认true
  *  hasCacheLoading：存在缓存数据时，是否显示loading，默认false
@@ -21,7 +22,7 @@
  */
 interface InterfaceApi {
 
-     @MyRetrofitGo(loading = true, cache = true, hasCacheLoading = false)
+     @MyRetrofitGo(tag = "获取提醒",loading = true, cache = true, hasCacheLoading = false)
      @POST("home/remind")
      fun getData(
          @Query("username") username: String,
