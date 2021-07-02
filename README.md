@@ -96,6 +96,11 @@ if(it.errno!=0&&!it.cache){
 ### 七、效果
 ![Video_20210626_034427_427](https://user-images.githubusercontent.com/4067327/123506188-91d41a80-d695-11eb-96aa-183b7d49325d.gif) ![Video_20210627_121527_755](https://user-images.githubusercontent.com/4067327/123532635-95bd7680-d741-11eb-9c58-7e89069f31e0.gif)
 
+### 八、随时查看http请求Log【Activity长按1秒，可查看当前Activity的所有网络请求log】
+![Video_20210702_092144_23](https://user-images.githubusercontent.com/4067327/124281158-074f5780-db7c-11eb-972e-e68f5ff48d51.gif)
+
+
+
 # 请资助我一个棒棒糖吧，在此感谢：
 
 <img width="406" alt="微信图片_20210609173434" src="https://user-images.githubusercontent.com/4067327/121332592-989b2780-c94a-11eb-9543-a4e00db3b759.png"> 
