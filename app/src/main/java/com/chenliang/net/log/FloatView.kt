@@ -16,7 +16,6 @@ class FloatView(context: Context?) : Button(context) {
     var show=false;
     var add=false
     var logs=ArrayList<BeanLog>()
-    var dialog=LogDialog()
     init {
         setBackgroundResource(R.drawable.float_button)
         text = "GO"
@@ -27,9 +26,9 @@ class FloatView(context: Context?) : Button(context) {
          if(!add){
              add=true
              show=false
-             this.x=x-100
-             this.y=y-300
-             (context as Activity).addContentView(this, ViewGroup.LayoutParams(100,100))
+             this.x=x-400
+             this.y=y-600
+             (context as Activity).addContentView(this, ViewGroup.LayoutParams(200,200))
              visibility =  View.GONE
              return
          }
@@ -41,6 +40,9 @@ class FloatView(context: Context?) : Button(context) {
               show=!show
               this.setOnClickListener {
                   Log.i("MyLog", "setOnClickListener")
+                  var dialog=LogDialog()
+                  dialog.setData(logs)
+                  visibility=View.GONE
                   dialog.show((context as FragmentActivity).supportFragmentManager,"")
               }
               View.VISIBLE
@@ -53,7 +55,6 @@ class FloatView(context: Context?) : Button(context) {
 
     fun addLog(log:BeanLog){
         logs.add(log)
-        dialog.setData(logs)
     }
 
 }

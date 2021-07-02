@@ -86,7 +86,14 @@ open class MyBaseActivity : AppCompatActivity() {
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (event!!.action == MotionEvent.ACTION_DOWN) {
             downTime = System.currentTimeMillis()
+
         } else if (event!!.action == MotionEvent.ACTION_MOVE) {
+            var upTime = System.currentTimeMillis()
+            if (upTime - downTime > 2000) {
+                bus.floatButton.show(event.x,event.y)
+                downTime = System.currentTimeMillis()
+            }
+        } else if (event!!.action == MotionEvent.ACTION_UP) {
             var upTime = System.currentTimeMillis()
             if (upTime - downTime > 2000) {
                 bus.floatButton.show(event.x,event.y)
