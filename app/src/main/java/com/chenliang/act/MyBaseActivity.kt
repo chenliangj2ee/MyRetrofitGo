@@ -3,63 +3,44 @@ package com.chenliang.act
 import android.app.Activity
 import android.app.ProgressDialog
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
+import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
+import com.chenliang.net.MyHttpEvent
+import com.chenliang.net.log.BeanLog
+import com.chenliang.net.log.FloatView
 import gorden.rxbus2.RxBus
 import gorden.rxbus2.Subscribe
 import gorden.rxbus2.ThreadMode
 
 open class MyBaseActivity : AppCompatActivity() {
 
-    lateinit var bus: BusLoading
+    lateinit var httpEvent: MyHttpEvent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        bus = BusLoading(this)
+        httpEvent = MyHttpEvent(this)
+
     }
 
+    override fun onResume() {
+        super.onResume()
+        httpEvent.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        httpEvent.onPause()
+    }
 
     override fun onDestroy() {
         super.onDestroy()
-        bus.stop()
+        httpEvent.onDestroy()
     }
 
-
-    /**
-     * 统一加载进度
-     */
-    class BusLoading(act: Activity) {
-        var act = act
-
-        init {
-            RxBus.get().register(this)
-        }
-
-        var dialogs = HashMap<String, ProgressDialog>()
-
-        @Subscribe(code = 31415926, threadMode = ThreadMode.MAIN)
-        fun showLoading(id: String) {
-            Log.i("MyLoading","showLoading.....$id")
-            var dialog = ProgressDialog(act)
-            dialog.setMessage("加载中")
-            dialog.show()
-            dialogs[id] = dialog
-
-        }
-
-        @Subscribe(code = 31415927, threadMode = ThreadMode.MAIN)
-        fun closeLoading(id: String) {
-            dialogs[id]?.dismiss()
-            dialogs.remove(id)
-            Log.i("MyLoading","closeLoading.....$id")
-        }
-
-        fun stop() {
-            RxBus.get().unRegister(this)
-            for (d in dialogs) {
-                d.value.dismiss()
-            }
-        }
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        httpEvent.onTouchEvent(event)
+        return super.onTouchEvent(event)
     }
-
 }

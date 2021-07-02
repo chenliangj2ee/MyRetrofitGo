@@ -10,9 +10,11 @@ import com.chenliang.MyApiFactory
 import com.chenliang.annotation.MyRetrofitGo
 import com.chenliang.annotation.MyRetrofitGoValue
 import com.chenliang.model.BeanRemind
+import com.chenliang.net.log.BeanLog
 import com.chenliang.utils.SpUtils
 import com.chenliang.vm.BaseViewModel
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.gson.stream.MalformedJsonException
 import gorden.rxbus2.RxBus
 import kotlinx.coroutines.CoroutineScope
@@ -40,34 +42,31 @@ var Any.API: InterfaceApi
 fun <T> Any.initAPI(url: String, cla: Class<T>): T = MyNetWork.initRetrofit(url).create(cla)
 
 
-
 fun <T> BaseViewModel.go(
     block: () -> Call<BaseResponse<T>>
 ): MutableLiveData<BaseResponse<T>> {
 
-
-    var s=System.currentTimeMillis()
     var cell = block()
-    var path  = cell.request().url.toString()
+    var path = cell.request().url.toString()
 
-
-    var data =dataMap[path.split("?")[0]]
-    if(data==null){
-        data=MutableLiveData<BaseResponse<Any>>()
-        dataMap[path.split("?")[0]]=data
+    /**查找MutableLiveData，如果不存在，创建一个，并放在map里-----------------------------------------*/
+    var data = dataMap[path.split("?")[0]]
+    if (data == null) {
+        data = MutableLiveData<BaseResponse<Any>>()
+        dataMap[path.split("?")[0]] = data
     }
-    Log.i("MyLog", "path:${path.split("?")[0]}  DataMap:${dataMap.size}")
+
     viewModelScope.launch(Dispatchers.IO) {
-        var myRetrofitGoValue: MyRetrofitGoValue
+        var myRetrofitGoValue: MyRetrofitGoValue? = null
+
         var responseBean = try {
 
-            //是否启用缓存
+            /**获取注解配置，查看是否启用缓存--------------------------------------------------------*/
             myRetrofitGoValue = getMyRetrofitGoValue(path)
             if (myRetrofitGoValue.cache) {
                 initCache(myRetrofitGoValue, path!!, data, viewModelScope)
             }
-
-            delay(1000)//模拟延迟,上线的时候，注释掉
+            /**获取网络数据-------------------------------------------------------------------------*/
             var res = cell.execute()
             if (res != null && res.isSuccessful) {
                 res.body()
@@ -80,21 +79,28 @@ fun <T> BaseViewModel.go(
         } catch (e: Exception) {
             apiException<T>(e)
         }
+        /**网络网络数据log到调试View显示-------------------------------------------------------------*/
+        BeanLog().send(myRetrofitGoValue!!.tag, path, responseBean!!)
 
-        viewModelScope.launch(Dispatchers.Main) { data.value=responseBean as BaseResponse<Any>  }
-        //把数据更新到缓存
+        /**设置MutableLiveData.value----------------------------------------------------------------*/
+        viewModelScope.launch(Dispatchers.Main) {
+            data.value = responseBean as BaseResponse<Any>
+        }
+
+        /**把数据更新到缓存--------------------------------------------------------------------------*/
         if (responseBean?.errno == 0) {
             SpUtils.putCache(path, responseBean);
         }
 
+        /**关闭loading-----------------------------------------------------------------------------*/
         delay(100)
         RxBus.get().send(31415927, path)
     }
-   return data!! as MutableLiveData<BaseResponse<T>>
+    return data!! as MutableLiveData<BaseResponse<T>>
 }
 
 /**
- * 获取MyRetrofitGo注解loading和cache
+ * 通过路径path，查找与路径value相等的方法，获取MyRetrofitGo注解loading和cache
  */
 fun getMyRetrofitGoValue(path: String): MyRetrofitGoValue {
     MyApiAnno.value.forEach {
@@ -102,7 +108,7 @@ fun getMyRetrofitGoValue(path: String): MyRetrofitGoValue {
             return it.value
         }
     }
-    return MyRetrofitGoValue(loading = true, cache = true, hasCacheLoading = false)
+    return MyRetrofitGoValue(loading = true, cache = true, hasCacheLoading = false, tag = "")
 }
 
 /**对象
@@ -163,7 +169,7 @@ fun <T> initCache(
 
         if (cacheResponse != null) {
             cacheResponse.cache = true
-            viewModelScope.launch(Dispatchers.Main) { data.value=cacheResponse }
+            viewModelScope.launch(Dispatchers.Main) { data.value = cacheResponse }
             hasCache = true
         }
 

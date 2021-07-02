@@ -22,7 +22,7 @@ interface InterfaceApi {
         @Query("age") age: String,
     ): Data<BeanRemind>
 
-    @MyRetrofitGo(loading = false, cache = false)
+    @MyRetrofitGo(tag = "获取用户",loading = false, cache = false)
     @GET("home/getUser")
     fun getDatas(
         @Query("username") username: String,
