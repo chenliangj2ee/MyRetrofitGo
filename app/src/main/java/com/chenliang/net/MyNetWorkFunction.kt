@@ -42,38 +42,32 @@ var Any.API: InterfaceApi
 fun <T> Any.initAPI(url: String, cla: Class<T>): T = MyNetWork.initRetrofit(url).create(cla)
 
 
-
 fun <T> BaseViewModel.go(
     block: () -> Call<BaseResponse<T>>
 ): MutableLiveData<BaseResponse<T>> {
 
-
-    var s=System.currentTimeMillis()
     var cell = block()
-    var path  = cell.request().url.toString()
+    var path = cell.request().url.toString()
 
-    Log.i("MyLog", "request:${ cell.request().url}")
-
-    var data =dataMap[path.split("?")[0]]
-    if(data==null){
-        data=MutableLiveData<BaseResponse<Any>>()
-        dataMap[path.split("?")[0]]=data
+    /**查找MutableLiveData，如果不存在，创建一个，并放在map里-----------------------------------------*/
+    var data = dataMap[path.split("?")[0]]
+    if (data == null) {
+        data = MutableLiveData<BaseResponse<Any>>()
+        dataMap[path.split("?")[0]] = data
     }
-    Log.i("MyLog", "path:${path.split("?")[0]}  DataMap:${dataMap.size}")
+
     viewModelScope.launch(Dispatchers.IO) {
-        var myRetrofitGoValue: MyRetrofitGoValue?=null
-        var log=BeanLog()
+        var myRetrofitGoValue: MyRetrofitGoValue? = null
+
         var responseBean = try {
 
-            //是否启用缓存
+            /**获取注解配置，查看是否启用缓存--------------------------------------------------------*/
             myRetrofitGoValue = getMyRetrofitGoValue(path)
             if (myRetrofitGoValue.cache) {
                 initCache(myRetrofitGoValue, path!!, data, viewModelScope)
             }
-
-            delay(1000)//模拟延迟,上线的时候，注释掉
+            /**获取网络数据-------------------------------------------------------------------------*/
             var res = cell.execute()
-            RxBus.get().send(31415928, log)
             if (res != null && res.isSuccessful) {
                 res.body()
             } else {
@@ -85,23 +79,28 @@ fun <T> BaseViewModel.go(
         } catch (e: Exception) {
             apiException<T>(e)
         }
-        log.tag=myRetrofitGoValue!!.tag
-        log.url=path
-        log.json=GsonBuilder() .setPrettyPrinting()  .create().toJson( responseBean)
-        viewModelScope.launch(Dispatchers.Main) { data.value=responseBean as BaseResponse<Any>  }
-        //把数据更新到缓存
+        /**网络网络数据log到调试View显示-------------------------------------------------------------*/
+        BeanLog().send(myRetrofitGoValue!!.tag, path, responseBean!!)
+
+        /**设置MutableLiveData.value----------------------------------------------------------------*/
+        viewModelScope.launch(Dispatchers.Main) {
+            data.value = responseBean as BaseResponse<Any>
+        }
+
+        /**把数据更新到缓存--------------------------------------------------------------------------*/
         if (responseBean?.errno == 0) {
             SpUtils.putCache(path, responseBean);
         }
 
+        /**关闭loading-----------------------------------------------------------------------------*/
         delay(100)
         RxBus.get().send(31415927, path)
     }
-   return data!! as MutableLiveData<BaseResponse<T>>
+    return data!! as MutableLiveData<BaseResponse<T>>
 }
 
 /**
- * 获取MyRetrofitGo注解loading和cache
+ * 通过路径path，查找与路径value相等的方法，获取MyRetrofitGo注解loading和cache
  */
 fun getMyRetrofitGoValue(path: String): MyRetrofitGoValue {
     MyApiAnno.value.forEach {
@@ -109,7 +108,7 @@ fun getMyRetrofitGoValue(path: String): MyRetrofitGoValue {
             return it.value
         }
     }
-    return MyRetrofitGoValue(loading = true, cache = true, hasCacheLoading = false,tag = "")
+    return MyRetrofitGoValue(loading = true, cache = true, hasCacheLoading = false, tag = "")
 }
 
 /**对象
@@ -170,7 +169,7 @@ fun <T> initCache(
 
         if (cacheResponse != null) {
             cacheResponse.cache = true
-            viewModelScope.launch(Dispatchers.Main) { data.value=cacheResponse }
+            viewModelScope.launch(Dispatchers.Main) { data.value = cacheResponse }
             hasCache = true
         }
 

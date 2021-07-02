@@ -1,8 +1,6 @@
 package com.chenliang.act
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import com.chenliang.BaseResponse
@@ -11,14 +9,14 @@ import com.chenliang.model.BeanRemind
 import com.chenliang.net.*
 import com.chenliang.vm.TestViewModel
 
-class MainActivity : MyBaseActivity() {
+class MainActivity2 : MyBaseActivity() {
 
 
     lateinit var message1: TextView
     lateinit var message2: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_main2)
 
         message1 = findViewById(R.id.message1)
         message2 = findViewById(R.id.message2)
@@ -28,15 +26,16 @@ class MainActivity : MyBaseActivity() {
         var data1: BaseResponse<BeanRemind>? = null
 
 
-        vm.test(this, "name1").obs(this) {
-            it.c { message1.text = "缓存数据${it.toJson()}";data1 = it }
-            it.y { message1.text = "网络数据${it.toJson()}" }
-            it.n {
-                if (data1 == null) message1.text = "异常数据${it.toJson()}"
-            }
-        }
+//        vm.test(this, "name1").obs(this) {
+//            it.c { message1.text = "缓存数据${it.toJson()}";data1 = it }
+//            it.y { message1.text = "网络数据${it.toJson()}" }
+//            it.n {
+//                if (data1 == null) message1.text = "异常数据${it.toJson()}"
+//            }
+//        }
 
-//        //获取Array
+        //获取Array
+
         vm.tests(this, "name1").obs(this) {
             it.c { message2.text = "缓存数据${it.toJson()}" }
             it.y { message2.text = "网络数据${it.toJson()}" }
@@ -44,8 +43,5 @@ class MainActivity : MyBaseActivity() {
         }
     }
 
-    fun next(v: View){
-        startActivity(Intent(this,MainActivity2::class.java))
-    }
 
 }

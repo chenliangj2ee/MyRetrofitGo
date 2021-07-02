@@ -15,7 +15,7 @@ typealias Datas<T> = Call<BaseResponse<ArrayList<T>>>
 interface InterfaceApi {
 
 
-    @MyRetrofitGo(tag = "获取通知",loading = true, cache = true, hasCacheLoading = false)
+    @MyRetrofitGo(loading = true, cache = true, hasCacheLoading = false)
     @POST("home/remind")
     fun getData(
         @Query("username") username: String,

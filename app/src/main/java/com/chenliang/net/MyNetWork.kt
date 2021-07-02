@@ -55,7 +55,7 @@ object MyNetWork {
             .newBuilder()
             .setEncodedQueryParameter(
                 "app_token",
-                "DYKTAPP//e32d7652edaeaccc53c615b4bdaa9778%3D%3D//si"
+                "DYKTAPP//3f66d9592f2808be7eaa3981df3cf058%3D%3D//si"
             );
         var newRequest = oldRequest.newBuilder()
             .method(oldRequest.method, oldRequest.body)
