@@ -67,6 +67,7 @@ fun <T> BaseViewModel.go(
                 initCache(myRetrofitGoValue, path!!, data, viewModelScope)
             }
             /**获取网络数据-------------------------------------------------------------------------*/
+            delay(2000)
             var res = cell.execute()
             if (res != null && res.isSuccessful) {
                 res.body()

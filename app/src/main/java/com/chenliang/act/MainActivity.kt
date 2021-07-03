@@ -2,6 +2,7 @@ package com.chenliang.act
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -29,11 +30,9 @@ class MainActivity : MyBaseActivity() {
 
 
         vm.test(this, "name1").obs(this) {
-            it.c { message1.text = "缓存数据${it.toJson()}";data1 = it }
+            it.c { message1.text = "缓存数据${it.toJson()}";data1 = it; }
             it.y { message1.text = "网络数据${it.toJson()}" }
-            it.n {
-                if (data1 == null) message1.text = "异常数据${it.toJson()}"
-            }
+            it.n {  if (data1 == null) message1.text = "异常数据${it.toJson()}"  }
         }
 
 //        //获取Array
@@ -44,8 +43,8 @@ class MainActivity : MyBaseActivity() {
         }
     }
 
-    fun next(v: View){
-        startActivity(Intent(this,MainActivity2::class.java))
+    fun next(v: View) {
+        startActivity(Intent(this, MainActivity2::class.java))
     }
 
 }
