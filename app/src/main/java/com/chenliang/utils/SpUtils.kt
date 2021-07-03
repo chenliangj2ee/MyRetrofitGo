@@ -1,15 +1,20 @@
 package com.chenliang.utils
 
+import android.app.Instrumentation
 import android.content.Context
 import android.text.TextUtils
 import android.util.Log
 import com.chenliang.MyApplication
+import com.chenliang.net.toJson
 import com.google.gson.Gson
 import java.lang.reflect.Type
 import java.util.*
+import kotlin.collections.HashMap
 
 object SpUtils {
     var CACHENAME = "SPUtils-android"
+
+    val dataMap = HashMap<String, Any>()
 
     private fun putString(
         context: Context,
@@ -36,7 +41,19 @@ object SpUtils {
         key: String,
         clazz: Class<T>?
     ): T? {
-        return MyApplication.con?.let { getObject(it, key, clazz) }
+
+        var res = dataMap[key]
+        if (res != null) {
+            Log.i("MyLog", "使用内存缓存")
+            return res as T
+        }
+
+        res = MyApplication.con?.let { getObject(it, key, clazz) }
+        if (res != null) {
+            Log.i("MyLog", "使用文件缓存")
+            dataMap[key] = res
+        }
+        return res
     }
 
 
@@ -46,7 +63,12 @@ object SpUtils {
     ) {
         if (MyApplication.con == null || bean == null || key == null)
             return
+        dataMap[key] = bean
+        Log.i("MyLog", "更新数据到内存缓存")
+        if (dataMap.size > 100)
+            dataMap.clear()
         putString(MyApplication.con!!, key, Gson().toJson(bean))
+        Log.i("MyLog", "更新数据到文件缓存")
     }
 
 
@@ -55,7 +77,7 @@ object SpUtils {
         key: String,
         clazz: Class<T>?
     ): T? {
-        if(context==null)
+        if (context == null)
             return null
         val json = getString(context, key)
         return if (TextUtils.isEmpty(json)) {
