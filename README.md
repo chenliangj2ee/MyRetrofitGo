@@ -1,5 +1,5 @@
 # MyRetrofitGo
-## 一、史上最精简的【带有二级缓存】的【网络请求】封装，Kotlin语言实现，Retrofit2 结合OkHttp3网络层，ViewModel技术，使用Kotlin协程加载网络数据；并对网络层添加2级缓存功能——内存缓存和文件缓存；同时针对ApiService接口通过注解的形式来配置是否显示loadingDiaog、是否启用缓存功能；开发者可长按Activity后随时查看当前页面的所有网络请求LOG信息，减轻开发工作，且增加用户体验，堪称史上最简洁的代码，实现你想要的功能；
+## 一、史上最精简的【带有二级缓存】的【网络请求】封装，Kotlin语言实现，Retrofit2 结合OkHttp3网络层，ViewModel技术，使用Kotlin协程加载网络数据；并对网络层添加2级缓存功能——内存缓存和文件缓存；同时针对ApiService接口通过注解的形式来配置是否显示loadingDiaog、是否启用缓存功能；开发者可长按Activity后随时查看当前页面的所有网络请求LOG信息，减轻开发工作，且增加用户体验，堪称史上最简洁的代码，实现你想要的功能；该项目，是以上功能实现的一个方案，具体在项目中的封装使用，请参考：https://github.com/chenliangj2ee/MVVM-Component
 
 
 ## 二、缓存逻辑：【开发者无需关心内部实现】
