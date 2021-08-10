@@ -12,17 +12,19 @@
 /**
  * 说明：接口返回类型必须为：Call<BaseResponse<T>>,可以简写为Data<T>或者Datas<T>
  *@MyRetrofitGo注解说明：
- *  tag：给接口定义个名字：方便http view查看，默认显示 @POST("home/remind")里的url
- *  loading：是否显示loadingDialog，默认true
- *  cache：是否启用缓存功能，默认true
- *  hasCacheLoading：存在缓存数据时，是否显示loading，默认false
+ *  mTag：给接口定义个名字：方便http view查看，默认显示 @POST("home/remind")里的url
+ *  mLoading：是否显示loadingDialog，默认true
+ *  mCache：是否启用缓存功能，默认true
+ *  mHasCacheLoading：存在缓存数据时，是否显示loading，默认false
+ *  mFailToast：是否启用接口失败情况下，自动弹toast提示；
+ *  mSuccessCode：接口成功后，发送的Event事件的code，比如：在详情页删除数据，前一页列表页，需要刷新列表；可以监听该code事件
  *@接口方法返回说明【BeanRemind为定义的数据模型】:
  *  如果接口返回数据类型为对象：则返回Data<BeanRemind>
  *  如果接口返回数据类型为数组：则返回Datas<BeanRemind>
  */
 interface InterfaceApi {
 
-     @MyRetrofitGo(tag = "获取提醒",loading = true, cache = true, hasCacheLoading = false)
+    @MyRetrofitGo(mTag = "获取提醒", mLoading = true,mCache = true ,mHasCacheLoading = false,mFailToast = true,mSuccessCode = 1001)
      @POST("home/remind")
      fun getData(
          @Query("username") username: String,
